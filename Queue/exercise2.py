@@ -8,34 +8,32 @@ y finalmente mezclar las dos colas resultantes en una sola cola ordenada.
 
 
 from typing import List
-from queue import Queue
 
-def merge_sort_queue(numbers: List[int]) -> Queue:
+def merge_sort(numbers: List[int]) -> List[int]:
     if len(numbers) <= 1:
-        return Queue(numbers)
+        return numbers
     else:
         mid = len(numbers) // 2
-        left_queue = merge_sort_queue(numbers[:mid])
-        right_queue = merge_sort_queue(numbers[mid:])
-        return merge_queue(left_queue, right_queue)
+        left = merge_sort(numbers[:mid])
+        right = merge_sort(numbers[mid:])
+        return merge(left, right)
 
-def merge_queue(queue1: Queue, queue2: Queue) -> Queue:
-    merged_queue = Queue()
-    while not queue1.empty() and not queue2.empty():
-        if queue1.queue[0] < queue2.queue[0]:
-            merged_queue.put(queue1.get())
+def merge(left: List[int], right: List[int]) -> List[int]:
+    merged = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            merged.append(left[i])
+            i += 1
         else:
-            merged_queue.put(queue2.get())
-    while not queue1.empty():
-        merged_queue.put(queue1.get())
-    while not queue2.empty():
-        merged_queue.put(queue2.get())
-    return merged_queue
+            merged.append(right[j])
+            j += 1
+    merged.extend(left[i:])
+    merged.extend(right[j:])
+    return merged
 
 numbers = [4, 3, 2, 1, 5, 6, 8, 7]
-sorted_queue = merge_sort_queue(numbers)
-sorted_numbers = []
-while not sorted_queue.empty():
-    sorted_numbers.append(sorted_queue.get())
+sorted_numbers = merge_sort(numbers)
 print(sorted_numbers)  # Output: [1, 2, 3, 4, 5, 6, 7, 8]
+
 
